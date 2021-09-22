@@ -3,4 +3,4 @@ homebrew-prosody
 
 How do I install this formula?
 --------------------------------
-Just `brew tap prosody/prosody` and then `brew install prosody`.
+Just `brew tap valentin-shatov/prosody` and then `brew install prosody`.

@@ -3,9 +3,9 @@ require "formula"
 class Prosody < Formula
   homepage "http://prosody.im"
 
-  url "https://prosody.im/downloads/source/prosody-0.9.14.tar.gz"
-  sha256 "27d1388acd79eaa453f2b194bd23c25121fe0a704d0dd940457caf1874ea1123"
-  version "0.9.14"
+  url "https://prosody.im/downloads/source/prosody-0.9.11.tar.gz"
+  sha256 "32bff4c323747f768c61b5c9a23790126d33258e96d4e589920b4c3d88b67256"
+  version "0.9.11"
 
   # url "https://hg.prosody.im/0.9/", :using => :hg
   # revision 1
@@ -43,6 +43,11 @@ class Prosody < Formula
             "--runwith=lua5.1",
             "--cflags=#{cflags}",
             "--ldflags=#{ldflags}"]
+
+    # FIXME remove in next Prosody release, fixing a GNUism
+    inreplace 'certs/Makefile' do |s|
+      s.sub! '@chmod 400 $@ -c', '@chmod 400 $@'
+    end
 
     system "./configure", *args
     system "make"
@@ -92,22 +97,16 @@ class Prosody < Formula
     # set lua paths for our prosody-luarocks
     inreplace ["#{prefix}/bin/prosody", "#{prefix}/bin/prosodyctl"] do |s|
       rep = "-- Will be modified by configure script if run --"
-      luapaths = <<~EOS.chomp
+      luapaths = <<-EOS.chomp
       package.path=[[#{libexec}/share/lua/5.1/?.lua;#{libexec}/share/lua/5.1/?/init.lua]];
       package.cpath=[[#{libexec}/lib/lua/5.1/?.so]];
       EOS
       s.sub! rep, "#{rep}\n\n#{luapaths}"
     end
-
-    system "#{bin}/prosody-luarocks", "install", "luasocket"
-    system "#{bin}/prosody-luarocks", "install", "luasec"
-    system "#{bin}/prosody-luarocks", "install", "luafilesystem"
-    system "#{bin}/prosody-luarocks", "install", "luaexpat", "EXPAT_DIR=#{Formula["expat"].opt_prefix}"
-    # system "#{bin}/prosody-luarocks", "install", "lua-zlib"
   end
 
   # TODO more detailed
-  def caveats; <<~EOS
+  def caveats; <<-EOS
     Prosody configs in: #{etc}/prosody
     Rocks install to: #{libexec}/lib/luarocks/rocks
 
