@@ -10,7 +10,7 @@ class Prosody < Formula
   # url "https://hg.prosody.im/0.9/", :using => :hg
   # revision 1
 
-  depends_on "lua@51"
+  depends_on "lua@5.1"
   depends_on "expat"
   depends_on "libidn"
   depends_on "openssl"
@@ -23,7 +23,7 @@ class Prosody < Formula
   def install
     # Install to the Cellar, but direct modules to prefix
     # Specify where the Lua is to avoid accidental conflict.
-    lua_prefix = Formula["lua@51"].opt_prefix
+    lua_prefix = Formula["lua@5.1"].opt_prefix
     openssl = Formula["openssl"]
 
     # set CFLAGS/LDFLAGS based on host OS (for shared libraries)
